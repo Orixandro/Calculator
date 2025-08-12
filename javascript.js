@@ -30,7 +30,7 @@ buttons.forEach(button => {
 let num = {
     value: [0, 0],
     current: 0,
-    text: "",
+    text: "0",
     display: "",
 }
 
@@ -85,7 +85,7 @@ operationButtons.forEach((operationButton) => {
         }
 
         num.current = 1
-        num.text = ""
+        num.text = "0"
         operator = operationButton.getAttribute("id")
         
         if (operator === "equality") {
@@ -102,7 +102,7 @@ ACButton.addEventListener("click", () => {
     num = {
         value: [0, 0],
         current: 0,
-        text: "",
+        text: "0",
         display: "",
     }
 
@@ -132,7 +132,13 @@ decimalButton.addEventListener("click", () => {
 
 const signButton = document.querySelector("#sign")
 signButton.addEventListener("click", () => {
-    num.value[num.current] = -num.value[num.current]
+    if (num.text.slice(0, 1) === "-") {
+        num.text = num.text.slice(1)
+    } else {
+        num.text = "-" + num.text
+    }
+    
+    num.value[num.current] = +num.text
     num.display = num.value[num.current].toString()
 
     refreshOperation()
