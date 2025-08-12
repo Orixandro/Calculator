@@ -19,9 +19,9 @@ const operationList = {
     }
 }
 
+const history = document.querySelector("#history")
 
-
-const buttons = document.querySelectorAll("#buttons button")
+const buttons = document.querySelectorAll("button")
 buttons.forEach(button => {
     button.addEventListener("mouseover",() => button.classList.add("active"))
     button.addEventListener("mouseout",() => button.classList.remove("active"))
@@ -77,7 +77,39 @@ operationButtons.forEach((operationButton) => {
         if (num.current === 1) {
             let result = operationList[operator]()
 
-            // a
+            let finishedOperation = document.createElement("li")
+
+            let operationDiv = document.createElement("div")
+
+            let copyButton = document.createElement("button")
+            let removeButton = document.createElement("button")    
+            
+            copyButton.classList.add("copy")
+            removeButton.classList.add("remove")
+            copyButton.textContent = "Copy result"
+            removeButton.textContent = "Remove"
+            copyButton.addEventListener("mouseover",() => copyButton.classList.add("active"))
+            copyButton.addEventListener("mouseout",() => copyButton.classList.remove("active"))
+            removeButton.addEventListener("mouseover",() => removeButton.classList.add("active"))
+            removeButton.addEventListener("mouseout",() => removeButton.classList.remove("active"))
+            
+            copyButton.addEventListener("click", () => {
+                navigator.clipboard.writeText(result)
+                copyButton.textContent = "Result copied!"
+                setTimeout(() => {
+                    copyButton.textContent = "Copy result"
+                }, 1500)
+            })
+            removeButton.addEventListener("click", () => finishedOperation.remove())
+
+            operationDiv.textContent = operation + " = " + result
+
+            operationDiv.appendChild(copyButton)
+            operationDiv.appendChild(removeButton)
+
+            finishedOperation.appendChild(operationDiv)
+
+            history.insertBefore(finishedOperation, history.children[0])
 
             num.value[0] = result
             num.value[1] = 0
@@ -144,3 +176,8 @@ signButton.addEventListener("click", () => {
     refreshOperation()
     refreshDisplays()
 })
+
+const removeAllButton = document.querySelector("#removeAll")
+removeAllButton.addEventListener("mouseover",() => removeAllButton.classList.add("active"))
+removeAllButton.addEventListener("mouseout",() => removeAllButton.classList.remove("active"))
+removeAllButton.addEventListener("click", () => history.replaceChildren())
