@@ -78,25 +78,35 @@ h2 {
     align-self: stretch;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
     justify-content: space-between;
 }
 
 #displays div {
     background-color: rgb(247, 247, 247);
+    color: rgb(66, 66, 66);
     border: 3px solid darkgray;
     border-radius: 20px;
+    display: flex;
+    overflow: hidden;
+    justify-content: end;
+    align-items: center;
+    font-weight: 300;
 }
 
 #operationDisplay {
     align-self: self-end;
-    width: 150px;
+    min-width: 120px;
+    max-width: 318px;
     height: 30px;
+    padding: 0px 10px;
 }
 
 #numDisplay {
     align-self: stretch;
     height: 75px;
+    padding: 0px 20px;
+    font-size: 40px;
 }
 
 #buttons {
@@ -113,6 +123,7 @@ h2 {
 #buttons button {
     font-family: "Outfit", "Roboto", sans-serif;
     font-size: 22px;
+    color: rgb(66, 66, 66);
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -123,7 +134,7 @@ h2 {
     border-radius: 10px;
 }
 
-#buttons #backspace {
+#buttons #delete {
     width: 160px;
 }
 
