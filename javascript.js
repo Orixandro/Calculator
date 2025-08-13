@@ -222,8 +222,32 @@ removeAllButton.addEventListener("mouseover",() => removeAllButton.classList.add
 removeAllButton.addEventListener("mouseout",() => removeAllButton.classList.remove("active"))
 removeAllButton.addEventListener("click", () => history.replaceChildren())
 
+const body = document.querySelector("body")
+let bCount = 0
+let oCount = 0
+
 document.addEventListener("keydown", (e) => {
     switch (e.key) {
+        case "b":
+            if (!(body.classList.contains("blue"))) {
+                bCount += 1
+            }
+            if (bCount === 3) {
+                body.classList.add("blue")
+                bCount = 0
+                oCount = 0
+            }
+            break
+        case "o":
+            if (body.classList.contains("blue")) {
+                oCount += 1
+            }
+            if (oCount === 3) {
+                body.classList.remove("blue")
+                bCount = 0
+                oCount = 0
+            }
+            break
         case "a":
         case "A":
             reset()
