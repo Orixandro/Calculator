@@ -34,7 +34,11 @@ let num = {
     display: "",
 }
 
+let pressedNumber = ""
+let pressedOperator = ""
+
 let operator = ""
+let lastEventOperator = false
 
 let operation = ""
 
@@ -57,24 +61,21 @@ function refreshDisplays() {
     operationDisplay.textContent = operation
 }
 
-const numberButtons = document.querySelectorAll("#buttons .number")
-numberButtons.forEach((numberButton) => {
-    numberButton.addEventListener("click", () => {
-        number = numberButton.getAttribute("id")
+function onNumber(pressedNumber) {
+    lastEventOperator = false
 
-        num.text += number
-        num.value[num.current] = +num.text
-        num.display = num.value[num.current].toString()
+    number = pressedNumber
 
-        refreshOperation()
-        refreshDisplays()
-    })
-})
+    num.text += number
+    num.value[num.current] = +num.text
+    num.display = num.value[num.current].toString()
 
-const operationButtons = document.querySelectorAll("#buttons .operation")
-operationButtons.forEach((operationButton) => {
-    operationButton.addEventListener("click", () => {
-        if (num.current === 1) {
+    refreshOperation()
+    refreshDisplays()
+}
+
+function onOperation(pressedOperator) {
+        if ((num.current === 1) && !(lastEventOperator)) {
             let result = operationList[operator]()
 
             let finishedOperation = document.createElement("li")
@@ -122,19 +123,19 @@ operationButtons.forEach((operationButton) => {
 
         num.current = 1
         num.text = "0"
-        operator = operationButton.getAttribute("id")
+        operator = pressedOperator
         
         if (operator === "equality") {
             num.current = 0
         }
 
+        lastEventOperator = true
+
         refreshOperation()
         refreshDisplays()
-    })
-})
+}
 
-const ACButton = document.querySelector("#AC")
-ACButton.addEventListener("click", () => {
+function reset() {
     num = {
         value: [0, 0],
         current: 0,
@@ -147,27 +148,26 @@ ACButton.addEventListener("click", () => {
     operation = ""
 
     refreshDisplays()
-})
+}
 
-const deleteButton = document.querySelector("#delete")
-deleteButton.addEventListener("click", () => {
+function backspace() {
     num.text = num.text.slice(0, -1)
     num.value[num.current] = +num.text
     num.display = num.value[num.current].toString()
 
     refreshOperation()
     refreshDisplays()
-})
+}
 
-const decimalButton = document.querySelector("#decimal")
-decimalButton.addEventListener("click", () => {
+function decimal() {
     if (!(num.text.includes("."))) {
         num.text += "."
     }
-})
+}
 
-const signButton = document.querySelector("#sign")
-signButton.addEventListener("click", () => {
+function sign() {
+    num.text = num.value[num.current].toString()
+
     if (num.text.slice(0, 1) === "-") {
         num.text = num.text.slice(1)
     } else {
@@ -179,9 +179,88 @@ signButton.addEventListener("click", () => {
 
     refreshOperation()
     refreshDisplays()
+}
+
+const numberButtons = document.querySelectorAll("#buttons .number")
+numberButtons.forEach((numberButton) => {
+    numberButton.addEventListener("click", () => {
+        pressedNumber = numberButton.getAttribute("id")
+        onNumber(pressedNumber)
+    })
+})
+
+const operationButtons = document.querySelectorAll("#buttons .operation")
+operationButtons.forEach((operationButton) => {
+    operationButton.addEventListener("click", () => {
+        pressedOperator = operationButton.getAttribute("id")
+        onOperation(pressedOperator)
+    })
+})
+
+const ACButton = document.querySelector("#AC")
+ACButton.addEventListener("click", () => {
+    reset()
+})
+
+const deleteButton = document.querySelector("#delete")
+deleteButton.addEventListener("click", () => {
+    backspace()
+})
+
+const decimalButton = document.querySelector("#decimal")
+decimalButton.addEventListener("click", () => {
+    decimal()
+})
+
+const signButton = document.querySelector("#sign")
+signButton.addEventListener("click", () => {
+    sign()
 })
 
 const removeAllButton = document.querySelector("#removeAll")
 removeAllButton.addEventListener("mouseover",() => removeAllButton.classList.add("active"))
 removeAllButton.addEventListener("mouseout",() => removeAllButton.classList.remove("active"))
 removeAllButton.addEventListener("click", () => history.replaceChildren())
+
+document.addEventListener("keydown", (e) => {
+    switch (e.key) {
+        case "a":
+        case "A":
+            reset()
+            break
+        case "Backspace":
+        case "Delete":
+            backspace()
+            break
+        case ".":
+        case ",":
+            decimal()
+            break
+        case "s":
+        case "S":
+            sign()
+            break
+        case "+":
+            onOperation("addition")
+            break
+        case "-":
+            onOperation("subtraction")
+            break
+        case "x":
+        case "X":
+        case "*":
+            onOperation("multiplication")
+            break
+        case "/":
+            onOperation("division")
+            break
+        case "=":
+        case "Enter":
+            onOperation("equality")
+        default:
+            if ("1234567890".includes(e.key)) {
+                onNumber(e.key)
+            }
+    }
+
+})
