@@ -81,6 +81,8 @@ operationButtons.forEach((operationButton) => {
 
             let operationDiv = document.createElement("div")
 
+            let buttonDiv = document.createElement("div")
+
             let copyButton = document.createElement("button")
             let removeButton = document.createElement("button")    
             
@@ -104,8 +106,10 @@ operationButtons.forEach((operationButton) => {
 
             operationDiv.textContent = operation + " = " + result
 
-            operationDiv.appendChild(copyButton)
-            operationDiv.appendChild(removeButton)
+            buttonDiv.appendChild(copyButton)
+            buttonDiv.appendChild(removeButton)
+            
+            operationDiv.appendChild(buttonDiv)
 
             finishedOperation.appendChild(operationDiv)
 
