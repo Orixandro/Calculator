@@ -41,6 +41,7 @@ let operator = ""
 let lastEventOperator = false
 
 let operation = ""
+let resultlessOperation = ""
 
 const numDisplay = document.querySelector("#numDisplay")
 const operationDisplay = document.querySelector("#operationDisplay")
@@ -76,7 +77,7 @@ function onNumber(pressedNumber) {
 
 function onOperation(pressedOperator) {
         if ((num.current === 1) && !(lastEventOperator)) {
-            let result = operationList[operator]()
+            let result = Math.round(operationList[operator]() * 100000) / 100000
 
             let finishedOperation = document.createElement("li")
 
@@ -105,7 +106,9 @@ function onOperation(pressedOperator) {
             })
             removeButton.addEventListener("click", () => finishedOperation.remove())
 
-            operationDiv.textContent = operation + " = " + result
+            resultlessOperation = operation + " ="
+            operation = resultlessOperation
+            operationDiv.textContent = resultlessOperation + " " + result
 
             buttonDiv.appendChild(copyButton)
             buttonDiv.appendChild(removeButton)
@@ -124,14 +127,15 @@ function onOperation(pressedOperator) {
         num.current = 1
         num.text = "0"
         operator = pressedOperator
-        
-        if (operator === "equality") {
-            num.current = 0
-        }
 
         lastEventOperator = true
 
-        refreshOperation()
+        if (operator === "equality") {
+            num.current = 0
+        } else {
+            refreshOperation()
+        }
+
         refreshDisplays()
 }
 
